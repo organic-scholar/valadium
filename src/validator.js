@@ -13,7 +13,7 @@ validator.only = function(value, path, rules, data){
         }
         var rule = validator.rules[key];
         var opts = rules[key];
-        var result = rule(value, path, opts);
+        var result = rule(value, path, opts, data);
         return Promise.resolve(result);
     });
 
@@ -64,6 +64,7 @@ validator.register = function(validators){
 };
 
 
+
 var basic = require('./rules/basic');
 var string = require('./rules/string');
 
@@ -71,4 +72,5 @@ var string = require('./rules/string');
     validator.register(validators);
 });
 
+validator.helpers = helpers;
 module.exports = validator;
