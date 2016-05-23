@@ -17,13 +17,16 @@ validator.only = function(value, path, rules, data){
         return Promise.resolve(result);
     });
 
-    return Promise.all(results).then(function(errors){
-        return errors.filter(function(error){
-            return error != undefined;
+    return new Promise(function(resolve, reject){
+        Promise.all(results).then(function(errors){
+            return errors.filter(function(error){
+                return error != undefined;
+            });
+        }).then(function(errors){
+            errors.length == 0 ? resolve(): reject(errors);
         });
-
     });
-    
+
 };
 
 validator.validate = function(data, rules){
@@ -36,41 +39,49 @@ validator.validate = function(data, rules){
 
         var val = helpers.getIn(data, key);
 
-        return validator.only(val, key, rules[key],data).then(function(err){
-            if(err.length == 0) return;
-            helpers.setIn(errors, key, err);
-            return err;
+        return new Promise(function(resolve, reject){
+            validator.only(val, key, rules[key],data).then(
+                function(){
+                    resolve();
+                },
+                function(errors){
+                    helpers.setIn(errors, key, errors);
+                    resolve();
+                });
         });
+
     });
 
     return new Promise(function(resolve, reject){
         Promise.all(results).then(function(){
             if(Object.keys(errors).length == 0){
-                return resolve(false);
+                return resolve();
             }
-            resolve(errors);
+            reject(errors);
         });
     });
 };
 
-
-validator.register = function(validators){
-    Object.keys(validators).forEach(function(name){
-        var v = validators[name];
-        if(typeof v === 'function'){
-            validator.rules[name] = v;
-        }
-    });
+validator.register = function(name, func){
+    if(typeof func === 'function'){
+        validator.rules[name] = func;
+    }
 };
 
 
+function registerMany(validators){
+    Object.keys(validators).forEach(function(name){
+        validator.register(name, validators[name]);
+    });
+}
 
 var basic = require('./rules/basic');
 var string = require('./rules/string');
 
 [basic, string].forEach(function(validators){
-    validator.register(validators);
+    registerMany(validators);
 });
 
 validator.helpers = helpers;
+
 module.exports = validator;
