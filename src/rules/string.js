@@ -1,7 +1,7 @@
 var helpers = require('../helpers');
 
 function length(val, key, opts){
-    if(val === undefined || val === '') return;
+    if(helper.isBlank(val)) return;
     if(val.length < opts.min){
         return key+' is too short use at least '+opts.min+' characters.';
     }

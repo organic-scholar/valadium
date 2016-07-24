@@ -1,4 +1,5 @@
 var helpers = require('../helpers')
+
 function notBlank(val, key){
     if(val === '' || val === null || val === undefined){
         return helpers.place(notBlank.msg, {key: key});
