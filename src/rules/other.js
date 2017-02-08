@@ -1,6 +1,5 @@
-function callback(val, key, cb){
+"use strict";
+function callback(val, key, cb) {
     return cb(val, cb);
 }
-module.exports = {
-    callback: callback
-}
+exports.callback = callback;

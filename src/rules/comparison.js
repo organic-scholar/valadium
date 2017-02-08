@@ -1,15 +1,13 @@
-function equalTo(val, key, opt){
-    if(val != opt){
-        return 'not equal to '+opt
+"use strict";
+function equalTo(val, key, opt) {
+    if (val != opt) {
+        return 'not equal to ' + opt;
     }
 }
-function identicalTo(val, key, opt){
-    if(val !== opt){
-        return 'not equal to '+opt
+exports.equalTo = equalTo;
+function identicalTo(val, key, opt) {
+    if (val !== opt) {
+        return 'not equal to ' + opt;
     }
 }
-
-module.exports = {
-    equalTo: equalTo,
-    identicalTo: identicalTo,
-};
+exports.identicalTo = identicalTo;

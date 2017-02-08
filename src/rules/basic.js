@@ -1,40 +1,30 @@
-var helpers = require('../helpers')
-
-function notBlank(val, key){
-    if(val === '' || val === null || val === undefined){
-        return helpers.place(notBlank.msg, {key: key});
+"use strict";
+var helpers = require("../helpers");
+var notBlankMsg = '{key} cannot be blank';
+function notBlank(val, key) {
+    if (val === '' || val === null || val === undefined) {
+        return helpers.place(notBlankMsg, { key: key });
     }
 }
-notBlank.msg = '{key} cannot be balnk'
-
-function notNull(val){
-    if(val === null || val === undefined){
-        return helpers.place(notBlank.msg, {key: key});
+exports.notBlank = notBlank;
+var notNullMsg = '{key} cannot be blank';
+function notNull(val, key) {
+    if (val === null || val === undefined) {
+        return helpers.place(notBlankMsg, { key: key });
     }
 }
-notNull.msg = '{key} cannot be balnk'
-
-function isTrue(val){
-    if(val !== true){
-        return "is not a true value."
+exports.notNull = notNull;
+function isTrue(val) {
+    if (val !== true) {
+        return "is not a true value.";
     }
 }
-
-
-function isFalse(val){
-    if(val !== false){
-        return "is not a false value."
+exports.isTrue = isTrue;
+function isFalse(val) {
+    if (val !== false) {
+        return "is not a false value.";
     }
 }
-function type(){
-
+exports.isFalse = isFalse;
+function type() {
 }
-
-
-module.exports = {
-    notBlank: notBlank,
-    notNull: notNull,
-    isTrue: isTrue,
-    isFalse: isFalse,
-    type: type
-};
