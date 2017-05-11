@@ -1,3 +1,5 @@
+import * as helpers from './helpers';
+
 export function only(value:any, path:string, validators:Array<Function>, data:any){
     let result = validators.map((v)=>{
         return Promise.resolve(v(value, path, data));
@@ -14,38 +16,38 @@ export function only(value:any, path:string, validators:Array<Function>, data:an
 
 }
 
-// function validate(data:any, validators:Array<Function>){
-//
-//     data = data || {};
-//
-//     let errors = {};
-//
-//     let results = Object.keys(rules).map(function (key) {
-//
-//         let val = helpers.getIn(data, key);
-//
-//         return new Promise(function(resolve, reject){
-//             validator.only(val, key, rules[key],data).then(
-//                 function(){
-//                     resolve();
-//                 },
-//                 function(errors){
-//                     helpers.setIn(errors, key, errors);
-//                     resolve();
-//                 });
-//         });
-//
-//     });
-//
-//     return new Promise(function(resolve, reject){
-//         Promise.all(results).then(function(){
-//             if(Object.keys(errors).length == 0){
-//                 return resolve();
-//             }
-//             reject(errors);
-//         });
-//     });
-// };
+export function validate(data:any, rules){
+
+    data = data || {};
+
+    let errors = {};
+
+    let results = Object.keys(rules).map(function (key) {
+
+        let val = data[key];
+
+        return new Promise(function(resolve, reject){
+            only(val, key, rules[key], data).then(
+                function(){
+                    resolve();
+                },
+                function(e){
+                    helpers.setIn(errors, key, e);
+                    resolve();
+                });
+        });
+
+    });
+
+    return new Promise(function(resolve, reject){
+        Promise.all(results).then(function(){
+            if(Object.keys(errors).length == 0){
+                return resolve();
+            }
+            reject(errors);
+        });
+    });
+};
 
 // validator.register = function(name, func){
 //     if(typeof func === 'function'){
